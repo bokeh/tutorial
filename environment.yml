@@ -1,0 +1,7 @@
+name: bk-tutorial
+channels:
+  - conda-forge
+dependencies:
+  - pandas
+  - notebook
+  - bokeh
