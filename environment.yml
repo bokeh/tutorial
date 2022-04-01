@@ -5,3 +5,6 @@ dependencies:
   - pandas
   - notebook
   - bokeh
+  - pyshp
+  - matplotlib
+  - networkx
