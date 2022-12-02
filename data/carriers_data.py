@@ -1,16 +1,20 @@
 """Data set operations"""
 
+import os
+
 import pandas as pd
 
 # Data set source: https://transtats.bts.gov/DL_SelectFields.asp?gnoyr_VQ=FIL&QO_fu146_anzr=Nv4%20Pn44vr45
 # Description: "This table contains domestic market data reported by U.S. air carriers, including carrier, origin, destination, and service class for enplaned passengers, freight (in lbs) and mail (in lbs) when both origin and destination airports are located within the boundaries of the United States and its territories.""
 # Each row of the table represents a route that was served in the specific month (there is no information about how many times that route was served in each month).
 
-FILE = "../data/T_T100D_MARKET_US_CARRIER_ONLY_20220506_205137.zip"
+
+FILENAME = "T_T100D_MARKET_US_CARRIER_ONLY_20220506_205137.zip"
+input_file = os.path.join(os.path.dirname(__file__), FILENAME)
 
 
 class CarrierDataSet:
-    def __init__(self, file=FILE):
+    def __init__(self, file=input_file):
         self.measurements = ["passengers", "freight", "mail"]
         self.full_data_set_df = self.get_full_data_set_df(file)
         self.biggest_carriers_df = self.get_biggest_airlines_by_passengers()
@@ -19,7 +23,7 @@ class CarrierDataSet:
         # self.states_routes_df = get_states_routes_df(self.full_data_set_df)
         # self
 
-    def get_full_data_set_df(self, file=FILE):
+    def get_full_data_set_df(self, file=input_file):
         """Full raw data set imported from CSV file"""
         get_full_data_set_df = pd.read_csv(
             file,
