@@ -1,6 +1,5 @@
 """ Demo dashboard"""
 import copy
-# Load data set object
 import sys
 from math import pi
 
@@ -13,6 +12,7 @@ from bokeh.palettes import Category10, Cividis11, Viridis
 from bokeh.plotting import figure
 from bokeh.transform import cumsum
 
+# Load data set object
 sys.path.append("../data")
 from carriers_data import CarrierDataSet
 
