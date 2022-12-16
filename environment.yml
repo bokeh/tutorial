@@ -2,10 +2,14 @@ name: bk-tutorial
 channels:
   - conda-forge
 dependencies:
+  - black
   - bokeh
+  - flake8
   - geopandas
   - matplotlib
+  - nbqa
   - networkx
   - notebook
   - pandas
+  - pre-commit
   - pyshp
