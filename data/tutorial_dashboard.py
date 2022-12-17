@@ -326,6 +326,7 @@ def shares_by_carrier_plot():
         annular_plot.axis.visible = False
         annular_plot.grid.grid_line_color = None
         annular_plot.legend.spacing = 1
+        annular_plot.legend.label_text_font_size = "0.8em"
 
         return annular_plot
 
