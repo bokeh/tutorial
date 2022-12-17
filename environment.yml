@@ -6,10 +6,9 @@ dependencies:
   - bokeh>=3.0.0
   - flake8
   - geopandas
-  - matplotlib
   - nbqa
-  - networkx
   - notebook
   - pandas
   - pre-commit
   - pyshp
+  - python=3.10
