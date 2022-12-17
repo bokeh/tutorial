@@ -3,7 +3,7 @@ channels:
   - conda-forge
 dependencies:
   - black
-  - bokeh
+  - bokeh>=3.0.0
   - flake8
   - geopandas
   - matplotlib
