@@ -5,9 +5,19 @@ from math import pi
 
 import geopandas as gpd
 from bokeh.layouts import column, layout
-from bokeh.models import (ColumnDataSource, CustomJS, Div, GeoJSONDataSource,
-                          LinearColorMapper, NumeralTickFormatter, OpenURL,
-                          Panel, Slider, Tabs, TapTool)
+from bokeh.models import (
+    ColumnDataSource,
+    CustomJS,
+    Div,
+    GeoJSONDataSource,
+    LinearColorMapper,
+    NumeralTickFormatter,
+    OpenURL,
+    TabPanel,
+    Slider,
+    Tabs,
+    TapTool,
+)
 from bokeh.palettes import Category10, Cividis11, Viridis
 from bokeh.plotting import figure
 from bokeh.transform import cumsum
@@ -63,9 +73,7 @@ def biggest_carriers_plot():
 
     largest_carriers_plot.xgrid.grid_line_color = None
     largest_carriers_plot.yaxis.formatter = NumeralTickFormatter(format="0,0")
-    largest_carriers_plot.xaxis.major_label_orientation = (
-        0.8  # rotate labels by roughly pi/4
-    )
+    largest_carriers_plot.xaxis.major_label_orientation = 0.8  # rotate labels by roughly pi/4
 
     # Add TapTool to look up airline IATA code
     largest_carriers_plot.add_tools(TapTool())
@@ -137,9 +145,7 @@ def largest_carriers_development_plot():
         )
         color += 1
 
-    largest_carriers_development_plot.yaxis.formatter = NumeralTickFormatter(
-        format="0,0"
-    )
+    largest_carriers_development_plot.yaxis.formatter = NumeralTickFormatter(format="0,0")
     largest_carriers_development_plot.xaxis.axis_label = (
         "Month"  # TBD: x axis ticks display months, optimally month names
     )
@@ -273,15 +279,13 @@ def shares_by_carrier_plot():
             ]
             category_df.loc[len(category_df.index)] = ["Others", other_sum]
             # add column with annular wedge angles
-            category_df["angle"] = (
-                category_df[category] / category_df[category].sum() * 2 * pi
-            )
+            category_df["angle"] = category_df[category] / category_df[category].sum() * 2 * pi
             # assign colors to carriers
             category_df["color"] = colors
             # truncate long carrier names
-            category_df["unique_carrier_name"] = category_df[
-                "unique_carrier_name"
-            ].apply(truncate_names, args=(25,))
+            category_df["unique_carrier_name"] = category_df["unique_carrier_name"].apply(
+                truncate_names, args=(25,)
+            )
             # add category dataframe to dict of dataframes
             dfs[category] = category_df
 
@@ -335,9 +339,7 @@ def shares_by_carrier_plot():
     tabs = []
     for category in categories:
         tabs.append(
-            Panel(
-                child=create_annular_wedge(dfs, category), title=category.capitalize()
-            )
+            TabPanel(child=create_annular_wedge(dfs, category), title=category.capitalize())
         )
 
     # display all plots as tabs
@@ -357,6 +359,6 @@ dashboard_layout = layout(
 )
 
 if __name__ == "__main__":
-    from bokeh.plotting import save
+    from bokeh.plotting import save, show
 
-    save(dashboard_layout)
+    show(dashboard_layout)
