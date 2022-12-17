@@ -355,7 +355,7 @@ dashboard_layout = layout(
         [distance_plot()],
         [departures_arrivals_map(), shares_by_carrier_plot()],
     ],
-    sizing_mode="scale_both",
+    sizing_mode="stretch_width",
 )
 
 if __name__ == "__main__":
