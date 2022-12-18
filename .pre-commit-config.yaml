@@ -3,7 +3,7 @@ repos:
   rev: 1.5.3
   hooks:
    - id: nbqa-black
-     args: [--check]
+     args: [--diff, --line-length=256]
      additional_dependencies: [black==22.10.0]
    - id: nbqa-flake8
      additional_dependencies: [flake8==6.0.0]
