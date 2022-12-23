@@ -45,43 +45,50 @@ def header():
 
 def biggest_carriers_plot():
     """Top N carriers by passengers"""
+    # define the initial number of carriers to display
     initial_carriers = 10
 
+    # read date from the demo data set
     source = ColumnDataSource(data.get_biggest_airlines_by_passengers())
 
+    # set up tooltips
     TOOLTIPS = [
         ("Position", "@position"),
         ("Carrier", "@unique_carrier_name"),
         ("Passengers", "@passengers{(0,0)}"),
     ]
 
+    # set up the figure
     largest_carriers_plot = figure(
-        x_range=source.data["unique_carrier_name"][:initial_carriers],
-        title=f"Top {initial_carriers} carriers by passengers (domestic routes)",
+        x_range=source.data["unique_carrier_name"][:initial_carriers],  # initially, display the top 10 carriers as the plot's x_range
+        title=f"Top {initial_carriers} carriers by passengers (domestic routes)",  # initially, display 10 as the number of carriers in the title
         height=300,
         sizing_mode="stretch_width",
         tooltips=TOOLTIPS,
+        tools="tap, hover",
+        toolbar_location=None,
     )
+
+    # add a vbar renderer
     carriers_vbar = largest_carriers_plot.vbar(
         x="unique_carrier_name",
         top="passengers",
-        nonselection_alpha=1,
+        nonselection_alpha=0.8,
         source=source,
         legend_label="Passengers",
         width=0.6,
     )
 
-    largest_carriers_plot.xgrid.grid_line_color = None
-    largest_carriers_plot.yaxis.formatter = NumeralTickFormatter(format="0,0")
+    largest_carriers_plot.xgrid.grid_line_color = None  # remove grid lines
+    largest_carriers_plot.yaxis.formatter = NumeralTickFormatter(format="0,0")  # format y axis ticks
     largest_carriers_plot.xaxis.major_label_orientation = 0.8  # rotate labels by roughly pi/4
 
     # Add TapTool to look up airline IATA code
-    largest_carriers_plot.add_tools(TapTool())
     url = "https://www.iata.org/en/publications/directories/code-search/?airline.search=@unique_carrier"
     taptool = largest_carriers_plot.select(type=TapTool)
     taptool.callback = OpenURL(url=url)
 
-    # Set up MultiSelect
+    # Set up Slider widget
     number_slider = Slider(
         start=1,
         end=25,
@@ -89,20 +96,22 @@ def biggest_carriers_plot():
         title="Number of airlines to consider",
     )
 
-    # Set up callback
+    # Set up CustomJS callback
     custom_js = CustomJS(
-        args={
-            "largest_carriers_plot": largest_carriers_plot,
-            "carriers": source.data["unique_carrier_name"],
+        args={  # the args parameter is a dictionary of the variables that will be accessible in the JavaScript code
+            "largest_carriers_plot": largest_carriers_plot,  # the first variable will be called "largest_carriers_plot" and links to the largest_carriers_plot Python object
+            "carriers": source.data["unique_carrier_name"],  # the second variable will be called "carriers" and links to list of carrier names in the source ColumnDataSource
         },
         code="""
-        largest_carriers_plot.title.text = "Top " + this.value + " carriers by passenger (domestic routes)"
-        largest_carriers_plot.x_range.factors = carriers.slice(0,this.value)
+        largest_carriers_plot.title.text = "Top " + this.value + " carriers by passenger (domestic routes)"  // update the plot title using the slider's value (this.value)
+        largest_carriers_plot.x_range.factors = carriers.slice(0,this.value)  // update the plot's x_range using data from the list of carrier names and the slider's value (this.value)
         """,
     )
 
+    # Add callback to slider widget
     number_slider.js_on_change("value", custom_js)
 
+    # assemble the layout
     largest_carriers_layout = column(number_slider, largest_carriers_plot)
 
     return largest_carriers_layout
@@ -110,7 +119,7 @@ def biggest_carriers_plot():
 
 def largest_carriers_development_plot():
     """Development of passengers, freight, and mail for the top 10 carriers"""
-    plot_title = f"Development of domestic passengers, freight, and mail for the top 10 carriers"
+    plot_title = "Development of domestic passengers, freight, and mail for the top 10 carriers"
 
     source = ColumnDataSource(data.get_monthly_values())
 
@@ -151,43 +160,47 @@ def largest_carriers_development_plot():
 
 
 def distance_plot():
+    """Scatter plot printing all available routes and their distance"""
+    # define a list of markers to use for the scatter plot
     MARKERS = ["circle", "square", "triangle"]
-
-    plot_title = f"Distance flown vs number of passengers, freight, and mail"
 
     source = ColumnDataSource(data.get_distance_df())
 
+    # set up the tooltips
     TOOLTIPS = [
-        ("Distance", "@distance"),
+        ("Distance", "@distance{(0,0)} miles"),
         ("Route", "@origin, @dest"),
         ("Amount", "$y{(0,0)}"),
     ]
 
-    # Use webgl output where available
+    # set up the figure
     distance_plot = figure(
-        title=plot_title,
+        title="Distance flown vs number of passengers, freight, and mail",
         height=300,
-        sizing_mode="stretch_width",
+        sizing_mode="stretch_width",  # use the full width of the parent element
         tooltips=TOOLTIPS,
-        output_backend="webgl",
+        output_backend="webgl",  # use webgl to speed up rendering
+        tools="pan,box_zoom,reset,save",
+        active_drag="box_zoom",  # enable box zoom by default
     )
 
+    # loop through the three measurements ("passengers", "freight", "mail") and plot them
     i = 0
     for measurement in data.measurements:
-        distance_plot.scatter(
+        distance_plot.scatter(  # use the scatter method to use different markers
             "distance",
             measurement,
             source=source,
             legend_label=measurement.capitalize(),
-            color=Category10[3][i],
-            marker=MARKERS[i],
+            color=Category10[3][i],  # assign a different color to each measurement
+            marker=MARKERS[i],  # assign a different marker to each measurement
             alpha=0.5,
         )
         i += 1
 
     distance_plot.yaxis.formatter = NumeralTickFormatter(format="0,0")
     distance_plot.xaxis.axis_label = "Distance (miles)"
-    distance_plot.legend.click_policy = "hide"
+    distance_plot.legend.click_policy = "hide"  # set the legend click policy to hide
 
     return distance_plot
 
