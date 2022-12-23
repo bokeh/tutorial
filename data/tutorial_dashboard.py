@@ -110,9 +110,7 @@ def biggest_carriers_plot():
 
 def largest_carriers_development_plot():
     """Development of passengers, freight, and mail for the top 10 carriers"""
-    plot_title = (
-        f"Development of domestic passengers, freight, and mail for the top 10 carriers"
-    )
+    plot_title = f"Development of domestic passengers, freight, and mail for the top 10 carriers"
 
     source = ColumnDataSource(data.get_monthly_values())
 
@@ -146,9 +144,7 @@ def largest_carriers_development_plot():
         color += 1
 
     largest_carriers_development_plot.yaxis.formatter = NumeralTickFormatter(format="0,0")
-    largest_carriers_development_plot.xaxis.axis_label = (
-        "Month"  # TBD: x axis ticks display months, optimally month names
-    )
+    largest_carriers_development_plot.xaxis.axis_label = "Month"  # TBD: x axis ticks display months, optimally month names
     largest_carriers_development_plot.legend.click_policy = "mute"
 
     return largest_carriers_development_plot
@@ -214,6 +210,7 @@ def departures_arrivals_map():
         title=f"Number of routes with a state as its origin (all domestic carriers)",
         x_axis_location=None,
         y_axis_location=None,
+        toolbar_location=None,
     )
 
     map_plot.grid.grid_line_color = None
@@ -226,7 +223,7 @@ def departures_arrivals_map():
 
     geo_source = GeoJSONDataSource(geojson=states_gdf.to_json())
 
-    us = map_plot.patches(
+    map_plot.patches(
         xs="xs",
         ys="ys",
         fill_color=dict(field=selected_map, transform=mapper),
@@ -235,68 +232,18 @@ def departures_arrivals_map():
         line_width=1,
     )
 
-    map_plot.x_range.renderers = [us]
-    map_plot.y_range.renderers = [us]
-
     return map_plot
 
 
 def shares_by_carrier_plot():
     """Shares of passengers, freight, and mail by carrier"""
 
-    # create list of colors (Spectral10 plus gray for "other")
-    colors = list(Viridis[10])
-    colors.append("#808080")
-
-    # Truncate long airline names to max_len
-    def truncate_names(airline_name, max_len=25):
-        if len(airline_name) > max_len:
-            airline_name = airline_name[: max_len - 3] + "..."
-        return airline_name
-
-    # function to create dataframes for passengers, freight, and mail
-    def create_dfs(df, categories):
-        """Create dict of dfs for each category"""
-        dfs = {}
-        for category in categories:
-            # create copy of df for current category
-            category_df = df
-            # sort dataframe by current category
-            category_df = category_df.sort_values(category, ascending=False)
-            category_df.reset_index(inplace=True, drop=True)
-            # remove rows that are not the current category
-            remove_columns = copy.deepcopy(categories)
-            remove_columns.remove(category)
-            category_df.drop(columns=remove_columns, inplace=True)
-            # sum values for "others" (all carriers not in top 10)
-            top_ten_by_category = category_df.iloc[:10]["unique_carrier_name"]
-            other_sum = category_df[
-                ~category_df["unique_carrier_name"].isin(top_ten_by_category)
-            ][category].sum()
-            # create dataframe for top 10 of current category plus others
-            category_df = category_df[
-                category_df["unique_carrier_name"].isin(top_ten_by_category)
-            ]
-            category_df.loc[len(category_df.index)] = ["Others", other_sum]
-            # add column with annular wedge angles
-            category_df["angle"] = category_df[category] / category_df[category].sum() * 2 * pi
-            # assign colors to carriers
-            category_df["color"] = colors
-            # truncate long carrier names
-            category_df["unique_carrier_name"] = category_df["unique_carrier_name"].apply(
-                truncate_names, args=(25,)
-            )
-            # add category dataframe to dict of dataframes
-            dfs[category] = category_df
-
-        return dfs
-
-    # Function to create annular wedge plots for passengers, freight, and mail
-    def create_annular_wedge(df_dict, category):
+    # Function to create annular wedge plots for passengers, freight, or mail
+    def create_annular_wedge(measurement):
 
         TOOLTIPS = [
             ("Carrier", "@unique_carrier_name"),
-            (category.capitalize(), f"@{category}{{(0,0)}}"),
+            (measurement.capitalize(), f"@{measurement}{{(0,0)}}"),
         ]
 
         annular_plot = figure(
@@ -306,9 +253,11 @@ def shares_by_carrier_plot():
             sizing_mode="scale_width",
             name="region",
             x_range=(-0.66, 1),
-            title=f"Top ten carriers by {category}",
+            title=f"Top ten carriers by {measurement}",
             tooltips=TOOLTIPS,
         )
+
+        source = ColumnDataSource(data.get_top_carriers_by_measurements(measurement))
 
         annular_plot.annular_wedge(
             x=0,
@@ -320,7 +269,7 @@ def shares_by_carrier_plot():
             line_color="white",
             fill_color="color",
             legend_field="unique_carrier_name",
-            source=df_dict[category],
+            source=source,
         )
 
         annular_plot.axis.visible = False
@@ -330,18 +279,16 @@ def shares_by_carrier_plot():
 
         return annular_plot
 
-    # list of categories to consider
-    categories = data.measurements
+    # list of measurements to consider
+    measurements = data.measurements
 
     # create dataframes for each category
-    dfs = create_dfs(data.get_carriers_df(), categories)
+    # dfs = create_dfs(data.get_carriers_df(), categories)
 
-    # create tabs with annular wedges for each category
+    # create tabs with annular wedges for each measurement
     tabs = []
-    for category in categories:
-        tabs.append(
-            TabPanel(child=create_annular_wedge(dfs, category), title=category.capitalize())
-        )
+    for measurement in measurements:
+        tabs.append(TabPanel(child=create_annular_wedge(measurement), title=measurement.capitalize()))
 
     # display all plots as tabs
     annular_wedge_tabs = Tabs(tabs=tabs, sizing_mode="scale_both")

@@ -5,6 +5,7 @@ dependencies:
   - black
   - bokeh>=3.0.0
   - flake8
+  - geojson
   - geopandas
   - nbqa
   - notebook

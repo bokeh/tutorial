@@ -18,10 +18,6 @@ class CarrierDataSet:
         self.measurements = ["passengers", "freight", "mail"]
         self.full_data_set_df = self.get_full_data_set_df(file)
         self.biggest_carriers_df = self.get_biggest_airlines_by_passengers()
-        # self.monthly_values_df = get_monthly_values(self.full_data_set_df, self.biggest_carriers_df)
-        # self.distance_df = get_distance_df(self.full_data_set_df, self.biggest_carriers_df)
-        # self.states_routes_df = get_states_routes_df(self.full_data_set_df)
-        # self
 
     def get_full_data_set_df(self, file=input_file):
         """Full raw data set imported from CSV file"""
@@ -41,19 +37,9 @@ class CarrierDataSet:
 
     def get_biggest_airlines_by_passengers(self):
         """The 25 airlines with the most passengers"""
-        biggest_carriers_df = (
-            self.full_data_set_df.groupby(["unique_carrier_name", "unique_carrier"])[
-                "passengers"
-            ]
-            .sum()
-            .reset_index()
-        )
-        biggest_carriers_df = biggest_carriers_df.sort_values(
-            by="passengers", ascending=False
-        )[:25]
-        biggest_carriers_df["position"] = range(
-            1, len(biggest_carriers_df) + 1
-        )  # add position column for tooltip
+        biggest_carriers_df = self.full_data_set_df.groupby(["unique_carrier_name", "unique_carrier"])["passengers"].sum().reset_index()
+        biggest_carriers_df = biggest_carriers_df.sort_values(by="passengers", ascending=False)[:25]
+        biggest_carriers_df["position"] = range(1, len(biggest_carriers_df) + 1)  # add position column for tooltip
         biggest_carriers_df.reset_index(drop=True, inplace=True)
 
         # Truncate long airline names to max_len
@@ -62,17 +48,13 @@ class CarrierDataSet:
                 airline_name = airline_name[: max_len - 3] + "..."
             return airline_name
 
-        biggest_carriers_df["unique_carrier_name"] = biggest_carriers_df[
-            "unique_carrier_name"
-        ].apply(truncate_names)
+        biggest_carriers_df["unique_carrier_name"] = biggest_carriers_df["unique_carrier_name"].apply(truncate_names)
 
         return biggest_carriers_df
 
     def get_quarters_df(self):
         """get quarterly values for all measurements"""
-        quarters_df = self.full_data_set_df.groupby(["quarter"]).agg(
-            {"distance": "sum", "passengers": "sum", "freight": "sum", "mail": "sum"}
-        )
+        quarters_df = self.full_data_set_df.groupby(["quarter"]).agg({"distance": "sum", "passengers": "sum", "freight": "sum", "mail": "sum"})
         quarters_df.index = quarters_df.index.map(lambda x: f"Q{x}")
         return quarters_df
 
@@ -81,41 +63,23 @@ class CarrierDataSet:
 
         import calendar
 
-        dimensions = [
-            measurement for measurement in self.measurements
-        ]  # create list of dimensions to create sums for
+        dimensions = [measurement for measurement in self.measurements]  # create list of dimensions to create sums for
 
         df_monthly = pd.DataFrame()
         for carrier in self.biggest_carriers_df["unique_carrier_name"]:
-            df = (
-                self.full_data_set_df[
-                    self.full_data_set_df["unique_carrier_name"] == carrier
-                ]
-                .groupby(["month"])[dimensions]
-                .sum()
-            )
+            df = self.full_data_set_df[self.full_data_set_df["unique_carrier_name"] == carrier].groupby(["month"])[dimensions].sum()
             df_monthly = pd.concat([df, df_monthly], axis=0)
 
         df_monthly = df_monthly.groupby(["month"]).sum()
-        df_monthly["month_name"] = df_monthly.index.to_series().apply(
-            lambda x: calendar.month_name[x]
-        )
+        df_monthly["month_name"] = df_monthly.index.to_series().apply(lambda x: calendar.month_name[x])
 
         return df_monthly
 
     def get_distance_df(self):
         """Distance for all measurements for the biggest carriers"""
 
-        distance_df = self.full_data_set_df[
-            self.full_data_set_df["unique_carrier_name"].isin(
-                self.biggest_carriers_df["unique_carrier_name"]
-            )
-        ]  # Only consider top N carriers (instead of all)
-        distance_df = distance_df.sort_values(
-            by=["distance"], ascending=True
-        ).reset_index(
-            drop=True
-        )  # Sort by distance
+        distance_df = self.full_data_set_df[self.full_data_set_df["unique_carrier_name"].isin(self.biggest_carriers_df["unique_carrier_name"])]  # Only consider top N carriers (instead of all)
+        distance_df = distance_df.sort_values(by=["distance"], ascending=True).reset_index(drop=True)  # Sort by distance
 
         return distance_df
 
@@ -123,10 +87,7 @@ class CarrierDataSet:
         """Domestic routes between states"""
 
         # Create a list of all states mentioned as either origin or destination
-        states = set(
-            list(self.full_data_set_df["origin_state_nm"])
-            + list(self.full_data_set_df["dest_state_nm"])
-        )
+        states = set(list(self.full_data_set_df["origin_state_nm"]) + list(self.full_data_set_df["dest_state_nm"]))
 
         # Create df of arrivals and departure per state
         # This includes all departures/arrivals per state, i.e. passengers + mail + freight
@@ -142,8 +103,49 @@ class CarrierDataSet:
         return states_routes_df
 
     def get_carriers_df(self):
-        carriers_df = self.full_data_set_df.groupby("unique_carrier_name").agg(
-            {"passengers": "sum", "freight": "sum", "mail": "sum"}
-        )
+        carriers_df = self.full_data_set_df.groupby("unique_carrier_name").agg({"passengers": "sum", "freight": "sum", "mail": "sum"})
         carriers_df.reset_index(inplace=True)
         return carriers_df
+
+    def get_top_carriers_by_measurements(self, measurement):
+        """Top 10 carriers by measurement"""
+
+        import copy
+        from math import pi
+        from bokeh.palettes import Viridis
+
+        def truncate_names(airline_name, max_len=25):
+            """Truncate long airline names to max_len"""
+            if len(airline_name) > max_len:
+                airline_name = airline_name[: max_len - 3] + "..."
+            return airline_name
+
+        # get data for all carriers and all measurements
+        top_carrier_df = self.get_carriers_df()
+        # sort by target measurement
+        top_carrier_df = top_carrier_df.sort_values(measurement, ascending=False)
+        # reset index based on new sort order
+        top_carrier_df.reset_index(inplace=True, drop=True)
+        # remove rows that are not the current measurement
+        remove_columns = copy.deepcopy(self.measurements)
+        remove_columns.remove(measurement)
+        top_carrier_df.drop(columns=remove_columns, inplace=True)
+        # sum values for "others" (all carriers not in top 10)
+        top_ten_by_measurement = top_carrier_df.iloc[:10]["unique_carrier_name"]
+        other_sum = top_carrier_df[~top_carrier_df["unique_carrier_name"].isin(top_ten_by_measurement)][measurement].sum()
+        # create dataframe for top 10 of current measurement plus others
+        top_carrier_df = top_carrier_df[top_carrier_df["unique_carrier_name"].isin(top_ten_by_measurement)]
+        top_carrier_df.loc[len(top_carrier_df.index)] = ["Others", other_sum]
+
+        # add column with annular wedge angles
+        top_carrier_df["angle"] = top_carrier_df[measurement] / top_carrier_df[measurement].sum() * 2 * pi
+
+        # generate list of 10 colors plus grey for "others"
+        colors = list(Viridis[10])
+        colors.append("#808080")
+        top_carrier_df["color"] = colors
+
+        # truncate long carrier names
+        top_carrier_df["unique_carrier_name"] = top_carrier_df["unique_carrier_name"].apply(truncate_names, args=(25,))
+
+        return top_carrier_df
