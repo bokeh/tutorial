@@ -1,7 +1,5 @@
 """ Demo dashboard"""
-import copy
 import sys
-from math import pi
 
 import geopandas as gpd
 from bokeh.layouts import column, layout
@@ -18,9 +16,9 @@ from bokeh.models import (
     Tabs,
     TapTool,
 )
-from bokeh.palettes import Category10, Cividis11, Viridis
+from bokeh.palettes import Category10, Cividis
 from bokeh.plotting import figure
-from bokeh.transform import cumsum
+from bokeh.transform import cumsum, transform
 
 # Load data set object
 sys.path.append("../data")
@@ -205,43 +203,46 @@ def distance_plot():
     return distance_plot
 
 
-def departures_arrivals_map():
+def departures_map():
+    # read the geojson file containing the state shapes
     states_gdf = gpd.read_file("../data/us-states.geojson")
+    # read the pre-processed data frame from the demo data set and join it to the state shapes
     states_gdf = states_gdf.join(data.get_states_routes_df(), on=states_gdf["Name"])
+    # create the GeoJSONDataSource
+    geo_source = GeoJSONDataSource(geojson=states_gdf.to_json())
 
-    MAP_SELECTIONS = ["origin", "destination"]
-    selected_map = MAP_SELECTIONS[0]  # render map either based on origin or destination
+    # set up the tooltips
+    TOOLTIPS = [
+        ("State", "@Name"),
+        ("# of routes departing from here", "@origin{(0,0)}"),
+    ]
 
-    TOOLTIPS = [("State", "@Name")]
-    TOOLTIPS.append(("# of routes departing from here", "@origin{(0,0)}"))
-
+    # set up the figure
     map_plot = figure(
         height=300,
         width=500,
         sizing_mode="scale_both",
         tooltips=TOOLTIPS,
-        title=f"Number of routes with a state as its origin (all domestic carriers)",
-        x_axis_location=None,
-        y_axis_location=None,
-        toolbar_location=None,
+        title="Number of routes with a state as its origin (all domestic carriers)",
+        x_axis_location=None,  # deactivate x axis
+        y_axis_location=None,  # deactivate y axis
+        toolbar_location=None,  # deactivate toolbar
     )
+    map_plot.grid.grid_line_color = None  # make grid lines invisible
 
-    map_plot.grid.grid_line_color = None
-
+    # set up a color mapper based on the 356-color version of Cividis
     mapper = LinearColorMapper(
-        palette=list(Cividis11),
-        low=states_gdf[selected_map].min(),
-        high=states_gdf[selected_map].max(),
+        palette=Cividis[256],
+        low=states_gdf["origin"].min(),
+        high=states_gdf["origin"].max(),
     )
 
-    geo_source = GeoJSONDataSource(geojson=states_gdf.to_json())
-
-    map_plot.patches(
+    map_plot.patches(  # use the patches method to draw the polygons of all states
         xs="xs",
         ys="ys",
-        fill_color=dict(field=selected_map, transform=mapper),
+        fill_color=transform(field_name="origin", transform=mapper),  # color the states by mapping the number of routes to color values from the color mapper
         source=geo_source,
-        line_color="#333344",
+        line_color="darkgrey",
         line_width=1,
     )
 
@@ -314,12 +315,12 @@ dashboard_layout = layout(
         [header()],
         [biggest_carriers_plot(), largest_carriers_development_plot()],
         [distance_plot()],
-        [departures_arrivals_map(), shares_by_carrier_plot()],
+        [departures_map(), shares_by_carrier_plot()],
     ],
     sizing_mode="stretch_width",
 )
 
 if __name__ == "__main__":
-    from bokeh.plotting import save, show
+    from bokeh.plotting import show
 
     show(dashboard_layout)
