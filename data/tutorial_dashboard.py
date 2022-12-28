@@ -4,6 +4,7 @@ import sys
 import geopandas as gpd
 from bokeh.layouts import column, layout
 from bokeh.models import (
+    ColorBar,
     ColumnDataSource,
     CustomJS,
     Div,
@@ -11,8 +12,8 @@ from bokeh.models import (
     LinearColorMapper,
     NumeralTickFormatter,
     OpenURL,
-    TabPanel,
     Slider,
+    TabPanel,
     Tabs,
     TapTool,
 )
@@ -35,7 +36,6 @@ def header():
     <p>Data: Bureau of Transportation Statistics, <a href="https://transtats.bts.gov/DL_SelectFields.asp?gnoyr_VQ=FIL&QO_fu146_anzr=Nv4%20Pn44vr45" target="_blank">Air Carriers: T-100 Domestic Market (U.S. Carriers)</a></p>
     """,
         sizing_mode="stretch_width",
-        height_policy="auto",
     )
 
     return header_div
@@ -63,7 +63,6 @@ def biggest_carriers_plot():
         height=300,
         sizing_mode="stretch_width",
         tooltips=TOOLTIPS,
-        tools="tap, hover",
         toolbar_location=None,
     )
 
@@ -77,6 +76,7 @@ def biggest_carriers_plot():
         width=0.6,
     )
 
+    # customize plot appearance
     largest_carriers_plot.xgrid.grid_line_color = None  # remove grid lines
     largest_carriers_plot.yaxis.formatter = NumeralTickFormatter(format="0,0")  # format y axis ticks
     largest_carriers_plot.xaxis.major_label_orientation = 0.8  # rotate labels by roughly pi/4
@@ -116,42 +116,46 @@ def biggest_carriers_plot():
 
 
 def largest_carriers_development_plot():
-    """Development of passengers, freight, and mail for the top 10 carriers"""
-    plot_title = "Development of domestic passengers, freight, and mail for the top 10 carriers"
+    """Development of domestic passengers, freight, and mail for the top 10 carriers"""
 
+    # read date from the demo data set
     source = ColumnDataSource(data.get_monthly_values())
 
-    TOOLTIPS = "$name: $y{(0,0)}"  # simplest way: just one line, one string
+    # set up tooltips
+    TOOLTIPS = "$name: $y{(0,0)}"
 
+    # set up the figure
     largest_carriers_development_plot = figure(
-        title=plot_title,
+        title="Domestic passengers, freight, and mail (top 10 carriers)",
         x_range=source.data["month_name"],
         height=300,
         sizing_mode="stretch_both",
         tooltips=TOOLTIPS,
     )
 
-    # Configure HoverTool
-    largest_carriers_development_plot.hover.anchor = "center"
+    # configure HoverTool
     largest_carriers_development_plot.hover.mode = "vline"
 
+    # set up three line renderers
     color = 0
-    for measurement in data.measurements:
+    for metric in data.metrics:
         largest_carriers_development_plot.line(
-            x="month_name",
-            y=measurement,
-            legend_label=measurement.capitalize(),
+            x="month_name",  # use the month_name column as the x axis
+            y=metric,  # use the metric column as the y axis
+            legend_label=metric.capitalize(),  # use the current metric as the legend label
             source=source,
             width=2,
-            color=Category10[3][color],
+            color=Category10[3][color],  # use the `color` variable to pick a different color for each iteration
             alpha=1,
-            muted_alpha=0.2,
-            name=measurement,
+            muted_alpha=0.2,  # make lines transparent when muted
+            name=metric,
         )
         color += 1
 
+    # customize plot appearance
     largest_carriers_development_plot.yaxis.formatter = NumeralTickFormatter(format="0,0")
-    largest_carriers_development_plot.xaxis.axis_label = "Month"  # TBD: x axis ticks display months, optimally month names
+    largest_carriers_development_plot.xaxis.axis_label = "Month"
+    largest_carriers_development_plot.xaxis.major_label_orientation = 0.8  # rotate labels by roughly pi/4
     largest_carriers_development_plot.legend.click_policy = "mute"
 
     return largest_carriers_development_plot
@@ -182,20 +186,21 @@ def distance_plot():
         active_drag="box_zoom",  # enable box zoom by default
     )
 
-    # loop through the three measurements ("passengers", "freight", "mail") and plot them
+    # loop through the three metrics ("passengers", "freight", "mail") and plot them
     i = 0
-    for measurement in data.measurements:
+    for metric in data.metrics:
         distance_plot.scatter(  # use the scatter method to use different markers
             "distance",
-            measurement,
+            metric,
             source=source,
-            legend_label=measurement.capitalize(),
-            color=Category10[3][i],  # assign a different color to each measurement
-            marker=MARKERS[i],  # assign a different marker to each measurement
+            legend_label=metric.capitalize(),
+            color=Category10[3][i],  # assign a different color to each metric
+            marker=MARKERS[i],  # assign a different marker to each metric
             alpha=0.5,
         )
         i += 1
 
+    # customize plot appearance
     distance_plot.yaxis.formatter = NumeralTickFormatter(format="0,0")
     distance_plot.xaxis.axis_label = "Distance (miles)"
     distance_plot.legend.click_policy = "hide"  # set the legend click policy to hide
@@ -219,9 +224,9 @@ def departures_map():
 
     # set up the figure
     map_plot = figure(
-        height=300,
-        width=500,
-        sizing_mode="scale_both",
+        height=200,  # set a width and height to define the aspect ratio
+        width=300,
+        sizing_mode="scale_width",
         tooltips=TOOLTIPS,
         title="Number of routes with a state as its origin (all domestic carriers)",
         x_axis_location=None,  # deactivate x axis
@@ -230,13 +235,18 @@ def departures_map():
     )
     map_plot.grid.grid_line_color = None  # make grid lines invisible
 
-    # set up a color mapper based on the 356-color version of Cividis
+    # set up a color mapper based on the 256-color version of Cividis
     mapper = LinearColorMapper(
         palette=Cividis[256],
         low=states_gdf["origin"].min(),
         high=states_gdf["origin"].max(),
     )
 
+    # set up the color bar
+    color_bar = ColorBar(color_mapper=mapper, formatter=NumeralTickFormatter(format="0,0"), orientation="horizontal", height=10)
+    map_plot.add_layout(obj=color_bar, place="below")
+
+    # draw the state polygons
     map_plot.patches(  # use the patches method to draw the polygons of all states
         xs="xs",
         ys="ys",
@@ -253,26 +263,31 @@ def shares_by_carrier_plot():
     """Shares of passengers, freight, and mail by carrier"""
 
     # Function to create annular wedge plots for passengers, freight, or mail
-    def create_annular_wedge(measurement):
+    def create_annular_wedge(metric):
 
+        # load data for metric from demo data set
+        source = ColumnDataSource(data.get_top_carriers_by_metrics(metric))
+
+        # set up the tooltips
         TOOLTIPS = [
             ("Carrier", "@unique_carrier_name"),
-            (measurement.capitalize(), f"@{measurement}{{(0,0)}}"),
+            (metric.capitalize(), f"@{metric}{{(0,0)}}"),
         ]
 
+        # set up the figure for the current metric
         annular_plot = figure(
-            height=300,
+            height=200,  # set a width and height to define the aspect ratio
+            width=300,
+            sizing_mode="scale_width",
             toolbar_location=None,
             outline_line_color=None,
-            sizing_mode="scale_width",
             name="region",
             x_range=(-0.66, 1),
-            title=f"Top ten carriers by {measurement}",
+            title=f"Top ten carriers by {metric}",
             tooltips=TOOLTIPS,
         )
 
-        source = ColumnDataSource(data.get_top_carriers_by_measurements(measurement))
-
+        # draw the annular wedges for the current metric
         annular_plot.annular_wedge(
             x=0,
             y=0,
@@ -286,6 +301,7 @@ def shares_by_carrier_plot():
             source=source,
         )
 
+        # customize plot appearance
         annular_plot.axis.visible = False
         annular_plot.grid.grid_line_color = None
         annular_plot.legend.spacing = 1
@@ -293,19 +309,16 @@ def shares_by_carrier_plot():
 
         return annular_plot
 
-    # list of measurements to consider
-    measurements = data.measurements
+    # get list of metrics to consider from demo data set
+    metrics = data.metrics
 
-    # create dataframes for each category
-    # dfs = create_dfs(data.get_carriers_df(), categories)
-
-    # create tabs with annular wedges for each measurement
+    # create tabs with annular wedges for each metric
     tabs = []
-    for measurement in measurements:
-        tabs.append(TabPanel(child=create_annular_wedge(measurement), title=measurement.capitalize()))
+    for metric in metrics:
+        tabs.append(TabPanel(child=create_annular_wedge(metric), title=metric.capitalize()))
 
     # display all plots as tabs
-    annular_wedge_tabs = Tabs(tabs=tabs, sizing_mode="scale_both")
+    annular_wedge_tabs = Tabs(tabs=tabs, sizing_mode="scale_width")
 
     return annular_wedge_tabs
 
@@ -317,7 +330,7 @@ dashboard_layout = layout(
         [distance_plot()],
         [departures_map(), shares_by_carrier_plot()],
     ],
-    sizing_mode="stretch_width",
+    sizing_mode="stretch_width",  # stretch the layout to the width of the browser window
 )
 
 if __name__ == "__main__":

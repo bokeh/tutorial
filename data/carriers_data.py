@@ -15,7 +15,7 @@ input_file = os.path.join(os.path.dirname(__file__), FILENAME)
 
 class CarrierDataSet:
     def __init__(self, file=input_file):
-        self.measurements = ["passengers", "freight", "mail"]
+        self.metrics = ["passengers", "freight", "mail"]
         self.full_data_set_df = self.get_full_data_set_df(file)
         self.biggest_carriers_df = self.get_biggest_airlines_by_passengers()
 
@@ -53,17 +53,17 @@ class CarrierDataSet:
         return biggest_carriers_df
 
     def get_quarters_df(self):
-        """get quarterly values for all measurements"""
+        """get quarterly values for all metrics"""
         quarters_df = self.full_data_set_df.groupby(["quarter"]).agg({"distance": "sum", "passengers": "sum", "freight": "sum", "mail": "sum"})
         quarters_df.index = quarters_df.index.map(lambda x: f"Q{x}")
         return quarters_df
 
     def get_monthly_values(self):
-        """Monthly values for all measurements"""
+        """Monthly values for all metrics"""
 
         import calendar
 
-        dimensions = [measurement for measurement in self.measurements]  # create list of dimensions to create sums for
+        dimensions = [metric for metric in self.metrics]  # create list of dimensions to create sums for
 
         df_monthly = pd.DataFrame()
         for carrier in self.biggest_carriers_df["unique_carrier_name"]:
@@ -76,7 +76,7 @@ class CarrierDataSet:
         return df_monthly
 
     def get_distance_df(self):
-        """Distance for all measurements for the biggest carriers"""
+        """Distance for all metrics for the biggest carriers"""
 
         distance_df = self.full_data_set_df[self.full_data_set_df["unique_carrier_name"].isin(self.biggest_carriers_df["unique_carrier_name"])]  # Only consider top N carriers (instead of all)
         distance_df = distance_df.sort_values(by=["distance"], ascending=True).reset_index(drop=True)  # Sort by distance
@@ -107,8 +107,8 @@ class CarrierDataSet:
         carriers_df.reset_index(inplace=True)
         return carriers_df
 
-    def get_top_carriers_by_measurements(self, measurement):
-        """Top 10 carriers by measurement"""
+    def get_top_carriers_by_metrics(self, metric):
+        """Top 10 carriers by metric"""
 
         import copy
         from math import pi
@@ -120,25 +120,25 @@ class CarrierDataSet:
                 airline_name = airline_name[: max_len - 3] + "..."
             return airline_name
 
-        # get data for all carriers and all measurements
+        # get data for all carriers and all metrics
         top_carrier_df = self.get_carriers_df()
-        # sort by target measurement
-        top_carrier_df = top_carrier_df.sort_values(measurement, ascending=False)
+        # sort by target metric
+        top_carrier_df = top_carrier_df.sort_values(metric, ascending=False)
         # reset index based on new sort order
         top_carrier_df.reset_index(inplace=True, drop=True)
-        # remove rows that are not the current measurement
-        remove_columns = copy.deepcopy(self.measurements)
-        remove_columns.remove(measurement)
+        # remove rows that are not the current metric
+        remove_columns = copy.deepcopy(self.metrics)
+        remove_columns.remove(metric)
         top_carrier_df.drop(columns=remove_columns, inplace=True)
         # sum values for "others" (all carriers not in top 10)
-        top_ten_by_measurement = top_carrier_df.iloc[:10]["unique_carrier_name"]
-        other_sum = top_carrier_df[~top_carrier_df["unique_carrier_name"].isin(top_ten_by_measurement)][measurement].sum()
-        # create dataframe for top 10 of current measurement plus others
-        top_carrier_df = top_carrier_df[top_carrier_df["unique_carrier_name"].isin(top_ten_by_measurement)]
+        top_ten_by_metric = top_carrier_df.iloc[:10]["unique_carrier_name"]
+        other_sum = top_carrier_df[~top_carrier_df["unique_carrier_name"].isin(top_ten_by_metric)][metric].sum()
+        # create dataframe for top 10 of current metric plus others
+        top_carrier_df = top_carrier_df[top_carrier_df["unique_carrier_name"].isin(top_ten_by_metric)]
         top_carrier_df.loc[len(top_carrier_df.index)] = ["Others", other_sum]
 
         # add column with annular wedge angles
-        top_carrier_df["angle"] = top_carrier_df[measurement] / top_carrier_df[measurement].sum() * 2 * pi
+        top_carrier_df["angle"] = top_carrier_df[metric] / top_carrier_df[metric].sum() * 2 * pi
 
         # generate list of 10 colors plus grey for "others"
         colors = list(Viridis[10])
