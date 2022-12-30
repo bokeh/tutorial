@@ -78,7 +78,7 @@ def biggest_carriers_plot():
 
     # customize plot appearance
     largest_carriers_plot.xgrid.grid_line_color = None  # remove grid lines
-    largest_carriers_plot.yaxis.formatter = NumeralTickFormatter(format="0,0")  # format y axis ticks
+    largest_carriers_plot.yaxis.formatter = NumeralTickFormatter(format="0,0")  # format y-axis ticks
     largest_carriers_plot.xaxis.major_label_orientation = 0.8  # rotate labels by roughly pi/4
 
     # Add TapTool to look up airline IATA code
@@ -140,8 +140,8 @@ def largest_carriers_development_plot():
     color = 0
     for metric in data.metrics:
         largest_carriers_development_plot.line(
-            x="month_name",  # use the month_name column as the x axis
-            y=metric,  # use the metric column as the y axis
+            x="month_name",  # use the month_name column as the x-axis
+            y=metric,  # use the metric column as the y-axis
             legend_label=metric.capitalize(),  # use the current metric as the legend label
             source=source,
             width=2,
@@ -177,7 +177,7 @@ def distance_plot():
 
     # set up the figure
     distance_plot = figure(
-        title="Distance flown vs number of passengers, freight, and mail",
+        title="Distance flown vs. number of passengers, freight, and mail",
         height=300,
         sizing_mode="stretch_width",  # use the full width of the parent element
         tooltips=TOOLTIPS,
@@ -229,8 +229,8 @@ def departures_map():
         sizing_mode="scale_width",
         tooltips=TOOLTIPS,
         title="Number of routes with a state as its origin (all domestic carriers)",
-        x_axis_location=None,  # deactivate x axis
-        y_axis_location=None,  # deactivate y axis
+        x_axis_location=None,  # deactivate x-axis
+        y_axis_location=None,  # deactivate y-axis
         toolbar_location=None,  # deactivate toolbar
     )
     map_plot.grid.grid_line_color = None  # make grid lines invisible
