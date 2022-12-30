@@ -1,12 +1,12 @@
 # Bokeh tutorial notebooks
 
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/bokeh/tutorial/main?labpath=notebooks%2F01_introduction.ipynb)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/bokeh/tutorial/main?filepath=notebooks%2F01_introduction.ipynb)
 
 This repository contains a series of Jupyter notebooks.
 These notebooks are available as an interactive tutorial at
-https://mybinder.org/v2/gh/bokeh/tutorial/main?labpath=notebooks%2F01_introduction.ipynb
+https://mybinder.org/v2/gh/bokeh/tutorial/main?filepath=notebooks%2F01_introduction.ipynb
 
-To learn about Bokeh, please use the tutorial on [mybinder.org](https://mybinder.org/v2/gh/bokeh/tutorial/main?labpath=notebooks%2F01_introduction.ipynb).
+To learn about Bokeh, please use the tutorial on [mybinder.org](https://mybinder.org/v2/gh/bokeh/tutorial/main?filepath=notebooks%2F01_introduction.ipynb).
 
 You can also [install and run the notebooks on a local machine](#local-setup).
 This is helpful if you can't access mybinder.org, or if you want to
