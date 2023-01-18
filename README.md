@@ -14,8 +14,8 @@ This is helpful if you can't access mybinder.org, or if you want to
 
 ## Local setup
 
-To run the tutorial locally, you first need to clone this repository to your local
-machine. For example:
+To run the tutorial locally, first clone this repository to your local machine.
+For example:
 
 ```bash
 git clone git@github.com:bokeh/tutorial.git
