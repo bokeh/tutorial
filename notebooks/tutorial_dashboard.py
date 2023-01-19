@@ -9,7 +9,6 @@ from bokeh.models import (
     CustomJS,
     Div,
     GeoJSONDataSource,
-    LinearColorMapper,
     NumeralTickFormatter,
     OpenURL,
     Slider,
@@ -19,7 +18,7 @@ from bokeh.models import (
 )
 from bokeh.palettes import Category10, Cividis
 from bokeh.plotting import figure
-from bokeh.transform import cumsum, transform
+from bokeh.transform import cumsum, linear_cmap
 
 # Load data set object
 sys.path.append("../data")
@@ -235,26 +234,19 @@ def departures_map():
     )
     map_plot.grid.grid_line_color = None  # make grid lines invisible
 
-    # set up a color mapper based on the 256-color version of Cividis
-    mapper = LinearColorMapper(
-        palette=Cividis[256],
-        low=states_gdf["origin"].min(),
-        high=states_gdf["origin"].max(),
-    )
-
-    # set up the color bar
-    color_bar = ColorBar(color_mapper=mapper, formatter=NumeralTickFormatter(format="0,0"), orientation="horizontal", height=10)
-    map_plot.add_layout(obj=color_bar, place="below")
-
     # draw the state polygons
-    map_plot.patches(  # use the patches method to draw the polygons of all states
+    us = map_plot.patches(  # use the patches method to draw the polygons of all states
         xs="xs",
         ys="ys",
-        fill_color=transform(field_name="origin", transform=mapper),  # color the states by mapping the number of routes to color values from the color mapper
+        fill_color=linear_cmap(field_name="origin", palette=Cividis[256], low=states_gdf["origin"].min(), high=states_gdf["origin"].max()),  # color the states by mapping the number of routes to color values from a palette
         source=geo_source,
         line_color="darkgrey",
         line_width=1,
     )
+
+    # add color bar
+    color_bar = ColorBar(color_mapper=us.glyph.fill_color.transform, formatter=NumeralTickFormatter(format="0,0"), orientation="horizontal", height=10)
+    map_plot.add_layout(obj=color_bar, place="below")
 
     return map_plot
 
