@@ -1,5 +1,9 @@
 # Custom
 .vscode/
+# exported files (chapter 13, Exporting and embedding)
+notebooks/*.html
+notebooks/*.svg
+notebooks/*.png
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
