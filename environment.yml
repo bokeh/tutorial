@@ -4,9 +4,7 @@ channels:
 dependencies:
   - black
   - bokeh>=3.2.0
-  - firefox
   - flake8
-  - geckodriver
   - geojson
   - geopandas
   - nbqa
