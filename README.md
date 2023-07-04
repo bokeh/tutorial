@@ -71,6 +71,22 @@ is expected to follow the
 [Code of Conduct](https://github.com/bokeh/bokeh/blob/main/docs/CODE_OF_CONDUCT.md).
 This includes working on these tutorials!
 
+## Preparing your environment
+
+The ``bk-tutorial`` environment includes the necessary dependencies to contribute to
+this repository. The only exception if [pre-commit](https://pre-commit.com/), which
+you can install with the following command (after activating the ``bk-tutorial``
+environment):
+
+```bash
+pre-commit install
+```
+
+This way, some basic linting and formatting checks will be run on your code before
+you commit it.
+
+## Making changes
+
 Contributing to this tutorial repository works similarly to
 [contributing to Bokeh itself](https://docs.bokeh.org/en/latest/docs/dev_guide.html):
 
