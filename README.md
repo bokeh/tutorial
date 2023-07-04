@@ -45,7 +45,15 @@ After the environment is set up, activate it with the following command:
 conda activate bk-tutorial
 ```
 
-From inside this environment, you can now start the Jupyter notebook server:
+Before opening the tutorial notebooks, you need to install the Bokeh sampledata.
+Make sure the ``bk-tutorial`` environment is activated, then run the following command:
+
+```bash
+bokeh sampledata
+```
+
+From inside the  ``bk-tutorial`` environment, you can now start the Jupyter notebook
+server:
 
 ```bash
 jupyter notebook
