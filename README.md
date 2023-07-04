@@ -14,53 +14,56 @@ This is helpful if you can't access mybinder.org, or if you want to
 
 ## Local setup
 
-To run the tutorial locally, first clone this repository to your local machine.
-For example:
+Follow these steps to run the tutorial notebooks on your local machine:
 
-```bash
-git clone git@github.com:bokeh/tutorial.git
-```
+1. To run the tutorial locally, first **clone** this repository to your local machine.
+    For example:
 
-After cloning the repository, enter the folder that contains the repository contents:
+    ```bash
+    git clone git@github.com:bokeh/tutorial.git
+    ```
 
-```bash
-cd tutorial
-```
+2. After cloning the repository, **enter the folder** that contains the repository contents:
 
-Next, you need to set up your environment. This tutorial uses the `conda` package
-manager.
-Please make sure
-[conda or Miniconda are installed and configured correctly](https://docs.conda.io/projects/conda/en/stable/)
-on your system.
+    ```bash
+    cd tutorial
+    ```
 
-Run the following command inside your local repository folder to create your environment:
+3. Next, you need to **set up your environment**. This tutorial uses the `conda` package
+    manager.
+    Please make sure
+    [conda or Miniconda are installed and configured correctly](https://docs.conda.io/projects/conda/en/stable/)
+    on your system.
 
-```bash
-conda env create -f environment.yml
-```
+    Run the following command inside your local repository folder to create your environment:
 
-After the environment is set up, activate it with the following command:
+    ```bash
+    conda env create -f environment.yml
+    ```
 
-```bash
-conda activate bk-tutorial
-```
+4. After the environment is set up, **activate** it with the following command:
 
-Before opening the tutorial notebooks, you need to install the Bokeh sampledata.
-Make sure the ``bk-tutorial`` environment is activated, then run the following command:
+    ```bash
+    conda activate bk-tutorial
+    ```
 
-```bash
-bokeh sampledata
-```
+5. Before opening the tutorial notebooks, you need to **install the Bokeh sampledata**.
+    Make sure the ``bk-tutorial`` environment is activated, then run the following command:
 
-From inside the  ``bk-tutorial`` environment, you can now start the Jupyter notebook
-server:
+    ```bash
+    bokeh sampledata
+    ```
 
-```bash
-jupyter notebook
-```
+6. From inside the  ``bk-tutorial`` environment, you can now **start the Jupyter
+    notebook server**:
 
-After opening Jupyter notebooks in a browser, go to the folder `notebooks`.
-Open the first notebook in this folder. It is called `01_introduction.ipynb`.
+    ```bash
+    jupyter notebook
+    ```
+
+7. After opening Jupyter notebooks in a browser, go to the folder `notebooks`.
+    **Open the first notebook in this folder**. It is called
+    `01_introduction.ipynb`.
 
 ## Contributing to this tutorial
 
