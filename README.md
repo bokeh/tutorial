@@ -99,8 +99,11 @@ environment):
 pre-commit install
 ```
 
-This way, some basic linting and formatting checks will be run on your code before
-you commit it.
+This way, some basic linting will be run on your code before you commit it.
+
+For consistency, we ask that you generally follow the
+[Black code style](https://black.readthedocs.io/en/stable/the_black_code_style/current_style.html)
+wherever possible.
 
 ### Making changes
 
