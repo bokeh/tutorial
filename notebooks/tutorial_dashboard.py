@@ -4,7 +4,6 @@ import sys
 import geopandas as gpd
 from bokeh.layouts import column, layout
 from bokeh.models import (
-    ColorBar,
     ColumnDataSource,
     CustomJS,
     Div,
@@ -245,7 +244,7 @@ def departures_map():
     )
 
     # add color bar
-    color_bar = ColorBar(color_mapper=us.glyph.fill_color.transform, formatter=NumeralTickFormatter(format="0,0"), orientation="horizontal", height=10)
+    color_bar = us.construct_color_bar(formatter=NumeralTickFormatter(format="0,0"), height=10)
     map_plot.add_layout(obj=color_bar, place="below")
 
     return map_plot
