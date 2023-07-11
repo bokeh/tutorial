@@ -24,7 +24,7 @@ https://github.com/bokeh/tutorial.git
 
 In the `tutorial` folder that's created with all material, navigate to the `notebooks` folder, and open `01_introduction.ipynb`.
 
-The environment for this tutorial is `global-gloabl-interactive-dataviz-bokeh`, and it is automatically selected for you.
+The environment for this tutorial is `global-global-interactive-dataviz-bokeh`, and it is automatically selected for you.
 
 ## Local setup
 
