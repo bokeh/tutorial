@@ -187,7 +187,7 @@ def distance_plot():
     # loop through the three metrics ("passengers", "freight", "mail") and plot them
     i = 0
     for metric in data.metrics:
-        distance_plot.scatter(  # use the scatter method to use different markers
+        distance_plot.scatter(
             "distance",
             metric,
             source=source,
