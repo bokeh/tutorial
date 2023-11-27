@@ -12,19 +12,11 @@ You can also [install and run the notebooks on a local machine](#local-setup).
 This is helpful if you can't access mybinder.org, or if you want to
 [contribute to this tutorial](#contributing-to-this-tutorial).
 
-## Setup with Nebari for Scipy 2023
+## Presentation for Scipy 2023
 
-This tutorial is being presented live at SciPy 2023, where you can use Nebari (JupterHub) hosted at [scipy.quansight.dev](https://scipy.quansight.dev/) to follow along.
+This tutorial was presented live during the SciPy 2023 conference. The current state of the repository, as presented, can be accessed through the designated git tag, available [here](https://github.com/bokeh/tutorial/releases/tag/SciPy2023).
 
-Follow [this participant's guide](https://docs.google.com/document/d/1vnWhNyUBRpILb2MAHQfTmZQY3pCIaCmroV9ke49nQlE/edit) to register and sign-in at, and use the following link to clone the tutorial materials:
-
-```bash
-https://github.com/bokeh/tutorial.git
-```
-
-In the `tutorial` folder that's created with all material, navigate to the `notebooks` folder, and open `01_introduction.ipynb`.
-
-The environment for this tutorial is `global-global-interactive-dataviz-bokeh`, and it is automatically selected for you.
+Additionally, the tutorial presentation is accessible on YouTube via the following link: https://youtu.be/G0Yc3ck4lC8?si=ZGqatTPnZBwjtdXO
 
 ## Local setup
 
@@ -90,16 +82,7 @@ This includes working on these tutorials!
 
 ### Preparing your environment
 
-The ``bk-tutorial`` environment includes the necessary dependencies to contribute to
-this repository. The only exception if [pre-commit](https://pre-commit.com/), which
-you can install with the following command (after activating the ``bk-tutorial``
-environment):
-
-```bash
-pre-commit install
-```
-
-This way, some basic linting will be run on your code before you commit it.
+The ``bk-tutorial`` environment includes the necessary dependencies to contribute to this repository.
 
 For consistency, we ask that you generally follow the
 [Black code style](https://black.readthedocs.io/en/stable/the_black_code_style/current_style.html)
