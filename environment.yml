@@ -2,11 +2,15 @@ name: bk-tutorial
 channels:
   - conda-forge
 dependencies:
-  - bokeh>=3.3.1
+  - python>=3.12
+  - pip
   - geojson
   - geopandas
   - jupyter_client<8
   - notebook
   - pandas
   - pyshp
-  - python>=3.12
+  - ipykernel
+  - pip:
+      - bokeh==3.5
+      - bokeh_sampledata
