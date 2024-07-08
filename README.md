@@ -14,7 +14,7 @@ This is helpful if you can't access mybinder.org, or if you want to
 
 ## Setup for SciPy US 2024
 
-This tutorial will be presented at the SciPy 2024 conference, where you can use Nebari (JupterHub) hosted at [scipy.quansight.dev](https://http://scipy.quansight.dev/) to follow along.
+This tutorial will be presented at the SciPy 2024 conference, where you can use Nebari (JupterHub) hosted at [scipy.quansight.dev](https://scipy.quansight.dev/) to follow along.
 
 Follow [this participant's guide](https://docs.google.com/document/d/11YWMZKW6Y4tXnMs3Jekc1S7BQWTR6THZazDaq3WoNxw/edit?usp=sharing) to register, sign-in, and download the tutorial materials.
 
