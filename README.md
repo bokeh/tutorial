@@ -12,9 +12,21 @@ You can also [install and run the notebooks on a local machine](#local-setup).
 This is helpful if you can't access mybinder.org, or if you want to
 [contribute to this tutorial](#contributing-to-this-tutorial).
 
-## Presentation for Scipy 2023
+## Setup for SciPy US 2024
 
-This tutorial was presented live during the SciPy 2023 conference. The current state of the repository, as presented, can be accessed through the designated git tag, available [here](https://github.com/bokeh/tutorial/releases/tag/SciPy2023).
+This tutorial will be presented at the SciPy 2024 conference, where you can use Nebari (JupterHub) hosted at [scipy.quansight.dev](https://http://scipy.quansight.dev/) to follow along.
+
+Follow [this participant's guide](https://docs.google.com/document/d/11YWMZKW6Y4tXnMs3Jekc1S7BQWTR6THZazDaq3WoNxw/edit?usp=sharing) to register, sign-in, and download the tutorial materials.
+
+In the `tutorials/tutorial` folder that's created with all material, navigate to the `notebooks` folder, and open `01_introduction.ipynb`.
+
+The environment for this tutorial is `scipy-scipy-interactive-dataviz-bokeh`, and it is automatically selected for you.
+
+## Previous presentations
+
+### SciPy US 2023
+
+This tutorial was presented live during the SciPy 2023 conference. The state of the repository, as presented, can be accessed through the designated git tag, available [here](https://github.com/bokeh/tutorial/releases/tag/SciPy2023).
 
 Additionally, the tutorial presentation is accessible on YouTube via the following link: https://youtu.be/G0Yc3ck4lC8?si=ZGqatTPnZBwjtdXO
 
