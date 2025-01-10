@@ -1,16 +1,6 @@
 # Bokeh tutorial notebooks
 
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/bokeh/tutorial/main?filepath=notebooks%2F01_introduction.ipynb)
-
-This repository contains a series of Jupyter notebooks.
-These notebooks are available as an interactive tutorial at
-https://mybinder.org/v2/gh/bokeh/tutorial/main?filepath=notebooks%2F01_introduction.ipynb
-
-To learn about Bokeh, please use the tutorial on [mybinder.org](https://mybinder.org/v2/gh/bokeh/tutorial/main?filepath=notebooks%2F01_introduction.ipynb).
-
-You can also [install and run the notebooks on a local machine](#local-setup).
-This is helpful if you can't access mybinder.org, or if you want to
-[contribute to this tutorial](#contributing-to-this-tutorial).
+You can [install and run the notebooks on a local machine](#local-setup).
 
 ## Setup for SciPy US 2024
 
@@ -65,21 +55,14 @@ Follow these steps to run the tutorial notebooks on your local machine:
     conda activate bk-tutorial
     ```
 
-5. Before opening the tutorial notebooks, you need to **install the Bokeh sampledata**.
-    Make sure the ``bk-tutorial`` environment is activated, then run the following command:
-
-    ```bash
-    bokeh sampledata
-    ```
-
-6. From inside the  ``bk-tutorial`` environment, you can now **start the Jupyter
+5. From inside the  ``bk-tutorial`` environment, you can now **start the Jupyter
     notebook server**:
 
     ```bash
     jupyter notebook
     ```
 
-7. After opening Jupyter notebooks in a browser, go to the folder `notebooks`.
+6. After opening Jupyter notebooks in a browser, go to the folder `notebooks`.
     **Open the first notebook in this folder**. It is called
     `01_introduction.ipynb`.
 
