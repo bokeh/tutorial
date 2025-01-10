@@ -1,30 +1,10 @@
 # Bokeh tutorial notebooks
 
-You can [install and run the notebooks on a local machine](#local-setup).
-
-## Setup for SciPy US 2024
-
-This tutorial will be presented at the SciPy 2024 conference, where you can use Nebari (JupterHub) hosted at [scipy.quansight.dev](https://scipy.quansight.dev/) to follow along.
-
-Follow [this participant's guide](https://docs.google.com/document/d/11YWMZKW6Y4tXnMs3Jekc1S7BQWTR6THZazDaq3WoNxw/edit?usp=sharing) to register, sign-in, and download the tutorial materials.
-
-In the `tutorials/tutorial` folder that's created with all material, navigate to the `notebooks` folder, and open `01_introduction.ipynb`.
-
-The environment for this tutorial is `scipy-scipy-interactive-dataviz-bokeh`, and it is automatically selected for you.
-
-## Previous presentations
-
-### SciPy US 2023
-
-This tutorial was presented live during the SciPy 2023 conference. The state of the repository, as presented, can be accessed through the designated git tag, available [here](https://github.com/bokeh/tutorial/releases/tag/SciPy2023).
-
-Additionally, the tutorial presentation is accessible on YouTube via the following link: https://youtu.be/G0Yc3ck4lC8?si=ZGqatTPnZBwjtdXO
-
-## Local setup
+## Setup and run the tutorials
 
 Follow these steps to run the tutorial notebooks on your local machine:
 
-1. To run the tutorial locally, first **clone** this repository to your local machine.
+1. Start by **cloning** this repository to your local machine.
     For example:
 
     ```bash
@@ -92,3 +72,9 @@ Contributing to this tutorial repository works similarly to
 2. Make PR and link it to the issue you created
 
 Once you have created a pull request, a member of the Bokeh core team will begin reviewing your pull request and may request changes or additions. If so, they will help you along the way with any questions you may have.
+
+## SciPy US 2023
+
+This tutorial was presented live during the SciPy 2023 conference. The state of the repository, as presented, can be accessed through the designated git tag, available [here](https://github.com/bokeh/tutorial/releases/tag/SciPy2023).
+
+The tutorial presentation is accessible on YouTube via the following link: https://youtu.be/G0Yc3ck4lC8?si=ZGqatTPnZBwjtdXO
