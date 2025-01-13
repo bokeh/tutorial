@@ -73,8 +73,7 @@ Contributing to this tutorial repository works similarly to
 
 Once you have created a pull request, a member of the Bokeh core team will begin reviewing your pull request and may request changes or additions. If so, they will help you along the way with any questions you may have.
 
-## SciPy US 2023
+## Previous presentations
 
-This tutorial was presented live during the SciPy 2023 conference. The state of the repository, as presented, can be accessed through the designated git tag, available [here](https://github.com/bokeh/tutorial/releases/tag/SciPy2023).
-
-The tutorial presentation is accessible on YouTube via the following link: https://youtu.be/G0Yc3ck4lC8?si=ZGqatTPnZBwjtdXO
+* SciPy 2024: [Material](https://github.com/bokeh/tutorial/releases/tag/SciPy2024)
+* SciPy 2023: [Video](https://youtu.be/G0Yc3ck4lC8?si=ZGqatTPnZBwjtdXO), [Material](https://github.com/bokeh/tutorial/releases/tag/SciPy2023)
