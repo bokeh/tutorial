@@ -20,7 +20,7 @@ from bokeh.plotting import figure
 from bokeh.transform import cumsum, linear_cmap
 
 # Load data set object
-sys.path.append("../data")
+sys.path.append("./data")
 from carriers_data import CarrierDataSet
 
 data = CarrierDataSet()
@@ -208,7 +208,7 @@ def distance_plot():
 
 def departures_map():
     # read the geojson file containing the state shapes
-    states_gdf = gpd.read_file("../data/us-states.geojson")
+    states_gdf = gpd.read_file("./data/us-states.geojson")
     # read the pre-processed data frame from the demo data set and join it to the state shapes
     states_gdf = states_gdf.join(data.get_states_routes_df(), on=states_gdf["Name"])
     # create the GeoJSONDataSource

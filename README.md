@@ -1,3 +1,22 @@
+# Work in progress to use pyodide kernel in JupyterLite for tutorial
+
+Deployed to github pages at https://bokeh.github.io/tutorial
+
+To try out locally, create a python virtual environment of your choice (`venv`, `pyenv`,
+'mamba', `conda`, etc) and follow these steps:
+
+```bash
+python -m pip install -r requirements.txt
+jupyter lite build --contents notebooks
+jupyter lite serve
+```
+
+and open a web browser at the URL specified.
+
+------------------------
+
+
+
 # Bokeh tutorial notebooks
 
 ## Setup and run the tutorials
