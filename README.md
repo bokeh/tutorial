@@ -1,3 +1,5 @@
+Osama Atef
+Oa3223173@gmail.com
 # Bokeh tutorial notebooks
 
 ## Setup and run the tutorials
